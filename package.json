@@ -1,0 +1,43 @@
+{
+  "name": "react-native-baidu-push",
+  "version": "1.0.0",
+  "description": "baidu-push",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sckoh/react-native-baidu-push.git"
+  },
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "notifications",
+    "push",
+    "apns",
+    "baidu",
+    "baidupush"
+  ],
+  "author": "sckoh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sckoh/react-native-baidu-push/issues"
+  },
+  "homepage": "https://github.com/sckoh/react-native-baidu-push#readme",
+  "peerDependencies": {
+    "react": "^15.3.2",
+    "react-native": "^0.40.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-preset-react-native": "^2.1.0",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.1.0"
+  }
+}
