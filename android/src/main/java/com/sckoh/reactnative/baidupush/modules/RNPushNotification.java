@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -60,6 +61,7 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
 
     public void onNewIntent(Intent intent) {
         if (intent.hasExtra("notification")) {
+            Log.d(LOG_TAG, "onNewIntent");
             Bundle bundle = intent.getBundleExtra("notification");
             bundle.putBoolean("foreground", false);
             intent.putExtra("notification", bundle);

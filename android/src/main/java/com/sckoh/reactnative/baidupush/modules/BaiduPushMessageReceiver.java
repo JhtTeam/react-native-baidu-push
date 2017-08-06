@@ -32,15 +32,16 @@ import static com.sckoh.reactnative.baidupush.modules.RNPushNotification.LOG_TAG
 
 public class BaiduPushMessageReceiver extends PushMessageReceiver {
 
-    private static interface ReactContextInitListener {
-        public void contextInitialized(ReactApplicationContext context);
+    private interface ReactContextInitListener {
+        void contextInitialized(ReactApplicationContext context);
     }
 
     @Override
     public void onBind(Context context, int errorCode, String appid, String userId, final String channelId,
             String requestId) {
         Log.d(LOG_TAG, "onBind");
-        handleEvent(new ReactContextInitListener() {
+        Context applicationContext = context.getApplicationContext();
+        handleEvent(applicationContext, new ReactContextInitListener() {
             @Override
             public void contextInitialized(ReactApplicationContext context) {
                 WritableMap params = Arguments.createMap();
@@ -51,12 +52,6 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         });
     }
 
-    //接收透传消息
-    /*
-    *   context 上下文
-        message 推送的消息
-        customContentString 自定义内容，为空或者json字符串
-    * */
     @Override
     public void onMessage(Context context, String message, String customContentString) {
         Log.d(LOG_TAG, "onMessage");
@@ -69,17 +64,19 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
             }
         }
 
+        Context applicationContext = context.getApplicationContext();
+
         Log.v(LOG_TAG, "onMessageReceived: " + bundle);
 
-        handleEvent(new ReactContextInitListener() {
+        handleEvent(applicationContext, new ReactContextInitListener() {
             @Override
             public void contextInitialized(ReactApplicationContext context) {
-                handleRemotePushNotification((ReactApplicationContext) context, bundle);
+                handleRemotePushNotification(context, bundle);
             }
         });
     }
 
-    private void handleEvent(final ReactContextInitListener reactContextInitListener) {
+    private void handleEvent(final Context applicationContext, final ReactContextInitListener reactContextInitListener) {
         // We need to run this on the main thread, as the React code assumes that is true.
         // Namely, DevServerHelper constructs a Handler() without a Looper, which triggers:
         // "Can't create handler inside thread that has not called Looper.prepare()"
@@ -87,21 +84,23 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         handler.post(new Runnable() {
             public void run() {
                 // Construct and load our normal React JS code bundle
-                ReactInstanceManager mReactInstanceManager = ((ReactApplication) getApplication()).getReactNativeHost().getReactInstanceManager();
-                com.facebook.react.bridge.ReactContext context = mReactInstanceManager.getCurrentReactContext();
-                // If it's constructed, send a notification
-                if (context != null) {
-                    reactContextInitListener.contextInitialized((ReactApplicationContext) context);
-                } else {
-                    // Otherwise wait for construction, then send the notification
-                    mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
-                        public void onReactContextInitialized(ReactContext context) {
-                            reactContextInitListener.contextInitialized((ReactApplicationContext) context);
+                if (applicationContext instanceof ReactApplication) {
+                    ReactInstanceManager mReactInstanceManager = ((ReactApplication) applicationContext).getReactNativeHost().getReactInstanceManager();
+                    com.facebook.react.bridge.ReactContext context = mReactInstanceManager.getCurrentReactContext();
+                    // If it's constructed, send a notification
+                    if (context != null) {
+                        reactContextInitListener.contextInitialized((ReactApplicationContext) context);
+                    } else {
+                        // Otherwise wait for construction, then send the notification
+                        mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+                            public void onReactContextInitialized(ReactContext context) {
+                                reactContextInitListener.contextInitialized((ReactApplicationContext) context);
+                            }
+                        });
+                        if (!mReactInstanceManager.hasStartedCreatingInitialContext()) {
+                            // Construct it in the background
+                            mReactInstanceManager.createReactContextInBackground();
                         }
-                    });
-                    if (!mReactInstanceManager.hasStartedCreatingInitialContext()) {
-                        // Construct it in the background
-                        mReactInstanceManager.createReactContextInBackground();
                     }
                 }
             }
