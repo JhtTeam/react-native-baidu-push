@@ -26,7 +26,6 @@ import java.util.Random;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.facebook.react.common.ApplicationHolder.getApplication;
-import static com.sckoh.reactnative.baidupush.BaiduPushConstants.CONTENT_AVAILABLE;
 import static com.sckoh.reactnative.baidupush.BaiduPushConstants.CUSTOM_CONTENT;
 import static com.sckoh.reactnative.baidupush.modules.RNPushNotification.LOG_TAG;
 
@@ -115,8 +114,10 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
             extras = new Bundle();
             extras.putString(BaiduPushConstants.TITLE, jsonObject.optString(BaiduPushConstants.TITLE));
             extras.putString(BaiduPushConstants.MESSAGE, jsonObject.optString(BaiduPushConstants.DESCRIPTION));
-            extras.putString(BaiduPushConstants.CONTENT_AVAILABLE, jsonObject.optString(CONTENT_AVAILABLE));
-            extras.putString(BaiduPushConstants.CONTENT, jsonObject.getJSONObject(CUSTOM_CONTENT).toString());
+            JSONObject customContent = jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT);
+            if (customContent != null) {
+                extras.putString(BaiduPushConstants.DATA, jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT).toString());
+            }
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }

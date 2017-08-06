@@ -225,6 +225,7 @@ Notifications._onNotification = function (data, isFromBackground = null) {
         alert: data.getAlert(),
         sound: data.getSound(),
       });
+      data.finish(RNNotifications.FetchResult.NoData);
     } else {
       const notificationData = {
         foreground: !isFromBackground,
