@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.baidu.android.pushservice.PushConstants;
@@ -18,6 +19,7 @@ import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -48,24 +50,6 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
         mRNPushNotificationHelper = new RNPushNotificationHelper(applicationContext);
         // This is used to delivery callbacks to JS
         mJsDelivery = new RNPushNotificationJsDelivery(reactContext);
-
-        createNotificationChannel();
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "TMS_CHANNEL";
-            String description = "CHANNEL FOR TMS";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(BaiduPushConstants.DEFAULT_CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getReactApplicationContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     @Override
@@ -80,10 +64,18 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
         return constants;
     }
 
-    public void onNewIntent(Intent intent) {
+    private Bundle getBundleFromIntent(Intent intent) {
+        Bundle bundle = null;
         if (intent.hasExtra("notification")) {
-            Log.d(LOG_TAG, "onNewIntent");
-            Bundle bundle = intent.getBundleExtra("notification");
+            bundle = intent.getBundleExtra("notification");
+        } else if (intent.hasExtra("google.message_id")) {
+            bundle = intent.getExtras();
+        }
+        return bundle;
+    }
+    public void onNewIntent(Intent intent) {
+        Bundle bundle = this.getBundleFromIntent(intent);
+        if (bundle != null) {
             bundle.putBoolean("foreground", false);
             intent.putExtra("notification", bundle);
             mJsDelivery.notifyNotification(bundle);
@@ -111,6 +103,13 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
                 manager.cancel(notificationID);
             }
         }, intentFilter);
+    }
+
+    @ReactMethod
+    public void checkPermissions(Promise promise) {
+        ReactContext reactContext = getReactApplicationContext();
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(reactContext);
+        promise.resolve(managerCompat.areNotificationsEnabled());
     }
 
     @ReactMethod
@@ -196,6 +195,14 @@ public class RNPushNotification extends ReactContextBaseJavaModule implements Ac
      */
     public void cancelLocalNotifications(ReadableMap userInfo) {
         mRNPushNotificationHelper.cancelScheduledNotification(userInfo);
+    }
+
+    @ReactMethod
+    /**
+     * Clear notification from the notification centre.
+     */
+    public void clearLocalNotification(int notificationID) {
+        mRNPushNotificationHelper.clearNotification(notificationID);
     }
 
     @ReactMethod
