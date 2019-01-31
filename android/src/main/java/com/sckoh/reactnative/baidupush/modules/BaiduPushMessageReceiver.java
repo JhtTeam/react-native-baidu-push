@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Random;
 
 import static android.content.Context.ACTIVITY_SERVICE;
-import static com.facebook.react.common.ApplicationHolder.getApplication;
 import static com.sckoh.reactnative.baidupush.BaiduPushConstants.CUSTOM_CONTENT;
 import static com.sckoh.reactnative.baidupush.modules.RNPushNotification.LOG_TAG;
 
@@ -36,15 +35,19 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
     }
 
     @Override
-    public void onBind(Context context, int errorCode, String appid, String userId, final String channelId,
+    public void onBind(Context context, int errorCode, String appid, final String userId, final String channelId,
             String requestId) {
-        Log.d(LOG_TAG, "onBind");
+        String responseString = "onBind errorCode=" + errorCode + " appid="
+                + appid + " userId=" + userId + " channelId=" + channelId
+                + " requestId=" + requestId;
+        Log.d(LOG_TAG, responseString);
         Context applicationContext = context.getApplicationContext();
         handleEvent(applicationContext, new ReactContextInitListener() {
             @Override
             public void contextInitialized(ReactApplicationContext context) {
                 WritableMap params = Arguments.createMap();
                 params.putString("deviceToken", channelId);
+                params.putString("userId", userId);
                 RNPushNotificationJsDelivery jsDelivery = new RNPushNotificationJsDelivery(context);
                 jsDelivery.sendEvent("remoteNotificationsRegistered", params);
             }
@@ -53,7 +56,9 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
 
     @Override
     public void onMessage(Context context, String message, String customContentString) {
-        Log.d(LOG_TAG, "onMessage");
+        String responseString = "onMessage message=" + message + " customContentString="
+                + customContentString;
+        Log.d(LOG_TAG, responseString);
         JSONObject data = getPushData(message);
         final Bundle bundle = createBundleFromMessage(message);
         if (data != null) {
@@ -108,18 +113,18 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
 
     private Bundle createBundleFromMessage(String message) {
         JSONObject jsonObject;
-        Bundle extras = null;
-        try {
-            jsonObject = new JSONObject(message);
-            extras = new Bundle();
+        jsonObject = getPushData(message);
+        Bundle extras = new Bundle();
+        if (jsonObject != null) {
             extras.putString(BaiduPushConstants.TITLE, jsonObject.optString(BaiduPushConstants.TITLE));
             extras.putString(BaiduPushConstants.MESSAGE, jsonObject.optString(BaiduPushConstants.DESCRIPTION));
             JSONObject customContent = jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT);
             if (customContent != null) {
                 extras.putString(BaiduPushConstants.DATA, jsonObject.optJSONObject(BaiduPushConstants.CUSTOM_CONTENT).toString());
             }
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage());
+        } else {
+            extras.putString(BaiduPushConstants.TITLE, message);
+            extras.putString(BaiduPushConstants.MESSAGE, message);
         }
         return extras;
     }
@@ -133,7 +138,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
     }
 
     private void handleRemotePushNotification(ReactApplicationContext context, Bundle bundle) {
-
+        if (bundle == null) return;
         // If notification ID is not provided by the user for push notification, generate one at random
         if (bundle.getString("id") == null) {
             Random randomNumberGenerator = new Random(System.currentTimeMillis());
@@ -166,7 +171,7 @@ public class BaiduPushMessageReceiver extends PushMessageReceiver {
         List<ActivityManager.RunningAppProcessInfo> processInfos = activityManager.getRunningAppProcesses();
         if (processInfos != null) {
             for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
-                if (processInfo.processName.equals(getApplication().getPackageName())) {
+                if (processInfo.processName.equals(context.getPackageName())) {
                     if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
                         for (String d : processInfo.pkgList) {
                             return true;

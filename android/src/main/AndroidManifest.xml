@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sckoh.reactnative.baidupush">
 
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="24" />
     <!-- Push service 运行需要的权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -22,10 +19,10 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
 
     <!-- 适配Android N系统必需的ContentProvider写权限声明，写权限包含应用包名-->
-    <!--<uses-permission android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.sckoh.reactnative.baidupush" />-->
-    <!--<permission-->
-        <!--android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.sckoh.reactnative.baidupush"-->
-        <!--android:protectionLevel="normal"></permission>-->
+    <uses-permission android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.gdctech.tms.TmsApp.baidu" />
+    <permission
+        android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.gdctech.tms.TmsApp.baidu"
+        android:protectionLevel="normal"></permission>
 
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -107,17 +104,17 @@
             android:exported="true" />
 
         <!-- 适配Android N系统必需的ContentProvider声明，写权限包含应用包名-->
-        <!--<provider-->
-            <!--android:name="com.baidu.android.pushservice.PushInfoProvider"-->
-            <!--android:authorities="com.sckoh.reactnative.baidupush.bdpush"-->
-            <!--android:exported="true"-->
-            <!--android:protectionLevel="signature"-->
-            <!--android:writePermission="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.sckoh.reactnative.baidupush" />-->
+        <provider
+            android:name="com.baidu.android.pushservice.PushInfoProvider"
+            android:authorities="gdctech.tms.TmsApp.baidu.bdpush"
+            android:exported="true"
+            android:protectionLevel="signature"
+            android:writePermission="baidu.push.permission.WRITE_PUSHINFOPROVIDER.gdctech.tms.TmsApp.baidu" />
 
         <!-- 在百度开发者中心查询应用的API Key -->
-        <!-- <meta-data
+        <meta-data
             android:name="baidu_push_api_key"
-            android:value="INSERT YOUR OWN APIKEY HERE" /> -->
+            android:value="C8biaeE9YGqoGTZ7Lh6H9OGL" />
     </application>
 
 </manifest>

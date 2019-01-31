@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -44,6 +44,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.facebook.react:react-native:+'
-    compile files('libs/pushservice-5.7.1.65.jar')
+    compile files('libs/pushservice-6.5.0.75.jar')
     compile 'me.leolin:ShortcutBadger:1.1.8@aar'
 }

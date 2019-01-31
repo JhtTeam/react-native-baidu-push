@@ -1,15 +1,44 @@
 {
-  "name": "react-native-baidu-push",
-  "version": "1.0.0",
-  "description": "baidu-push",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
+  "_from": "github:JhtTeam/react-native-baidu-push#master",
+  "_id": "react-native-baidu-push@1.0.0",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/react-native-baidu-push",
+  "_phantomChildren": {},
+  "_requested": {
     "type": "git",
-    "url": "git+https://github.com/sckoh/react-native-baidu-push.git"
+    "raw": "github:JhtTeam/react-native-baidu-push#master",
+    "rawSpec": "github:JhtTeam/react-native-baidu-push#master",
+    "saveSpec": "github:JhtTeam/react-native-baidu-push#master",
+    "fetchSpec": null,
+    "gitCommittish": "master"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "github:JhtTeam/react-native-baidu-push#9f0faf9859eefee9f1721f49d4bcfc284ab74abb",
+  "_spec": "github:JhtTeam/react-native-baidu-push#master",
+  "_where": "/Working/OutSourcing/NTQ/TMS",
+  "author": {
+    "name": "sckoh"
+  },
+  "bugs": {
+    "url": "https://github.com/sckoh/react-native-baidu-push/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "baidu-push",
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-preset-react-native": "^2.1.0",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.1.0"
+  },
+  "homepage": "https://github.com/sckoh/react-native-baidu-push#readme",
   "keywords": [
     "react-component",
     "react-native",
@@ -21,23 +50,19 @@
     "baidu",
     "baidupush"
   ],
-  "author": "sckoh",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sckoh/react-native-baidu-push/issues"
-  },
-  "homepage": "https://github.com/sckoh/react-native-baidu-push#readme",
+  "main": "index.js",
+  "name": "react-native-baidu-push",
   "peerDependencies": {
     "react": "^15.3.2",
     "react-native": "^0.40.0"
   },
-  "devDependencies": {
-    "babel-eslint": "^7.2.3",
-    "babel-preset-react-native": "^2.1.0",
-    "eslint": "^4.3.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.1.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sckoh/react-native-baidu-push.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
 }
