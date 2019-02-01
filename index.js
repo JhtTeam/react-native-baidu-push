@@ -204,10 +204,12 @@ Notifications.localNotificationSchedule = function (details: Object) {
 };
 
 /* Internal Functions */
-Notifications._onRegister = function (token: String) {
+Notifications._onRegister = function (token: String, userId: String) {
+  console.log("Notifications._onRegister... ", token)
   if (this.onRegister !== false) {
     this.onRegister({
       token,
+      userId,
       os: Platform.OS,
     });
   }

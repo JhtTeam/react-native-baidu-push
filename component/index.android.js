@@ -85,7 +85,9 @@ NotificationsComponent.prototype.addEventListener = function (
     listener = DeviceEventEmitter.addListener(NOTIF_REGISTER_EVENT, (
       registrationInfo,
     ) => {
-      handler(registrationInfo.deviceToken);
+      console.log("NotificationsComponent... addEventListener: ", NOTIF_REGISTER_EVENT);
+      console.log("NotificationsComponent... addEventListener: ", registrationInfo);
+      handler(registrationInfo.deviceToken,registrationInfo.userId);
     });
   } else if (type === 'remoteFetch') {
     listener = DeviceEventEmitter.addListener(REMOTE_FETCH_EVENT, (
