@@ -44,7 +44,6 @@ public class RNPushNotificationJsDelivery {
 
         WritableMap params = Arguments.createMap();
         params.putString("dataJSON", bundleString);
-8
         sendEvent("remoteNotificationReceived", params);
     }
 
